@@ -78,4 +78,11 @@ struct ext_man_elem_header {
 	/* just after this header should be type dependent content */
 } __packed;
 
+/* Extended manifest elements identificators */
+enum ext_man_elem_type {
+	EXT_MAN_ELEM_FW_VERSION		= 0,
+	EXT_MAN_ELEM_CC_VERSION		= 1,
+	EXT_MAN_ELEM_PROBE_INFO		= 2,
+};
+
 #endif /* __KERNEL_EXT_MANIFEST_H__ */
