@@ -30,6 +30,7 @@
 #include "rimage.h"
 
 #define EXT_MAN_DATA_SECTION ".fw_metadata"
+#define EXT_MAN_UUID_DICT_SECTION ".fw_metadata_uuid_dict"
 
 int ext_man_write(struct image *image);
 

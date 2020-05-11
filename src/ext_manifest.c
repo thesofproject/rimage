@@ -11,6 +11,7 @@
 
 #include "kernel/ext_manifest_gen.h"
 #include "kernel/ext_manifest.h"
+#include "common.h"
 #include "rimage.h"
 
 const struct ext_man_header ext_man_template = {
@@ -81,6 +82,87 @@ static int ext_man_validate(uint32_t section_size, const void *section_data)
 	}
 }
 
+/*
+ * Insert `section_name` content after `elem_type` header.
+ * Save result in new buffer, then replace `meta_section_data`.
+ * Return `section_name` size or error code.
+ */
+static int ext_man_update_element_with_list(const struct module *module,
+					    int32_t *metadata_size,
+					    uint8_t **metadata_buff,
+					    enum ext_man_elem_type elem_type,
+					    const char *section_name)
+{
+	struct ext_man_elem_header* head = NULL;
+	uint8_t *meta_buff = *metadata_buff;
+	uint8_t *sec_buffer = NULL;
+	const Elf32_Shdr *section;
+	int32_t extra_elem_size;
+	int32_t extra_mem_size;
+	int32_t split_offset;
+	int32_t padding_size;
+	uint32_t offset = 0;
+	uint8_t *temp_buff;
+	int ret;
+
+	/* find `elem_type` in meta_section */
+	while (offset < *metadata_size) {
+		head = (struct ext_man_elem_header*)&meta_buff[offset];
+		if (head->type == elem_type || !head->elem_size)
+			break;
+		offset += head->elem_size;
+	}
+
+	if (!head || head->type != elem_type) {
+		fprintf(stdout,
+			"Extended manifest element %d not found\n", elem_type);
+		return -EINVAL;
+	}
+
+	/* read section with content of the list */
+	ret = elf_read_section(module, section_name, &section,
+			       (void **)&sec_buffer);
+	if (ret < 0) {
+		fprintf(stderr,
+			"error: failed to read %s section content, code %d\n",
+			section_name, ret);
+		return ret;
+	}
+
+	split_offset = offset + head->elem_size;
+	extra_mem_size =
+		ALIGN_UP(head->elem_size + section->size, EXT_MAN_ALIGN) -
+		ALIGN_UP(head->elem_size, EXT_MAN_ALIGN);
+	extra_elem_size =
+		ALIGN_UP(head->elem_size + section->size, EXT_MAN_ALIGN) -
+		head->elem_size;
+	padding_size =
+		ALIGN_UP(head->elem_size, EXT_MAN_ALIGN) - head->elem_size;
+
+	temp_buff = malloc(*metadata_size + extra_mem_size);
+	if (!temp_buff) {
+		free(sec_buffer);
+		return -ENOMEM;
+	}
+
+	/* 
+	 * update element size and insert the list after element header,
+	 */
+	head->elem_size += extra_elem_size;
+	memcpy(&temp_buff[0], meta_buff, split_offset);
+	memcpy(&temp_buff[split_offset], sec_buffer, section->size);
+	memcpy(&temp_buff[offset + head->elem_size],
+	       &meta_buff[split_offset + padding_size],
+	       max(0, *metadata_size - split_offset - padding_size));
+
+	free(*metadata_buff);
+	*metadata_buff = temp_buff;
+	*metadata_size = ALIGN_UP(*metadata_size + extra_mem_size,
+				  EXT_MAN_ALIGN);
+
+	return 0;
+}
+
 static int ext_man_build(const struct module *module,
 			 struct ext_man_header **dst_buff)
 {
@@ -98,6 +180,17 @@ static int ext_man_build(const struct module *module,
 			"error: failed to read %s section content, code %d\n",
 			EXT_MAN_DATA_SECTION, ret);
 		return sec_buffer_size;
+	}
+
+	ret = ext_man_update_element_with_list(module, &sec_buffer_size,
+					       &sec_buffer,
+					       EXT_MAN_ELEM_UUID_DICT,
+					       EXT_MAN_UUID_DICT_SECTION);
+	if (ret < 0) {
+		fprintf(stderr,
+			"error: failed to update extended manifest element with %s section content, code %d\n",
+			EXT_MAN_UUID_DICT_SECTION, ret);
+		goto out;
 	}
 
 	/* fill ext_man struct, size aligned to 4 to avoid unaligned accesses */
