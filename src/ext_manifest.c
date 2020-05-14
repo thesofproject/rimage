@@ -88,23 +88,22 @@ static int ext_man_build(const struct module *module,
 	const Elf32_Shdr *section;
 	uint8_t *buffer = NULL;
 	uint8_t *sec_buffer = NULL;
-	size_t offset;
-	int ret;
+	int32_t sec_buffer_size;
+	int ret = 0;
 
-	ret = elf_read_section(module, EXT_MAN_DATA_SECTION, &section,
-			       (void **)&sec_buffer);
-	if (ret < 0) {
+	sec_buffer_size = elf_read_section(module, EXT_MAN_DATA_SECTION,
+					   &section, (void **)&sec_buffer);
+	if (sec_buffer_size < 0) {
 		fprintf(stderr,
 			"error: failed to read %s section content, code %d\n",
 			EXT_MAN_DATA_SECTION, ret);
-		goto out;
+		return sec_buffer_size;
 	}
-	ret = 0;
 
 	/* fill ext_man struct, size aligned to 4 to avoid unaligned accesses */
 	memcpy(&ext_man, &ext_man_template, sizeof(struct ext_man_header));
 	ext_man.full_size = ext_man.header_size;
-	ext_man.full_size += section->size;
+	ext_man.full_size += sec_buffer_size;
 	if (ext_man.full_size % 4) {
 		fprintf(stderr,
 			"error: extended manifest size must be aligned to 4\n");
@@ -121,9 +120,7 @@ static int ext_man_build(const struct module *module,
 
 	/* fill buffer with ext_man and section content */
 	memcpy(buffer, &ext_man, ext_man.header_size);
-	offset = ext_man.header_size;
-
-	memcpy(&buffer[offset],sec_buffer, section->size);
+	memcpy(&buffer[ext_man.header_size], sec_buffer, sec_buffer_size);
 
 	*dst_buff = (struct ext_man_header *)buffer;
 
