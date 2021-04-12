@@ -7,6 +7,7 @@
 #define __MANIFEST_H__
 
 #include <stdint.h>
+#include <rimage/cavs/cavs_ext_manifest.h>
 #include <rimage/sof/user/manifest.h>
 #include <rimage/css.h>
 #include <rimage/cse.h>
@@ -127,6 +128,15 @@ struct fw_image_manifest_v2_5 {
 	struct sof_man_fw_desc desc;	/* at offset MAN_DESC_OFFSET */
 } __attribute__((packed));
 
+struct fw_image_manifest_v2_6 {
+	struct fw_image_manifest_v2_5 man_v2_5;
+	struct fw_ext_manifest ext_man;
+	int mod_cfg_count;
+	struct sof_man_mod_config *mod_cfg;
+	int mod_man_count;
+	struct sof_man_module *mod_man;
+};
+
 extern struct fw_image_manifest_v2_5 tgl_manifest;
 
 /*
@@ -180,8 +190,10 @@ int man_write_fw_v1_5(struct image *image);
 int man_write_fw_v1_5_sue(struct image *image);
 int man_write_fw_v1_8(struct image *image);
 int man_write_fw_v2_5(struct image *image);
+int man_write_fw_v2_6(struct image *image);
 int man_write_fw_meu_v1_5(struct image *image);
 int man_write_fw_meu_v1_8(struct image *image);
 int man_write_fw_meu_v2_5(struct image *image);
+int man_write_fw_meu_v2_6(struct image *image);
 
 #endif
