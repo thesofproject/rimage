@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
 	image.xcc_mod_offset = DEFAULT_XCC_MOD_OFFSET;
 
-	while ((opt = getopt(argc, argv, "ho:va:s:k:ri:x:f:b:ec:y:")) != -1) {
+	while ((opt = getopt(argc, argv, "ho:va:s:k:ri:x:f:b:ec:y:p:")) != -1) {
 		switch (opt) {
 		case 'o':
 			image.out_file = optarg;
@@ -88,6 +88,9 @@ int main(int argc, char *argv[])
 		case 'y':
 			image.verify_file = optarg;
 			break;
+		case 'p':
+			image.strip_file = optarg;
+			break;
 		case 'h':
 			usage(argv[0]);
 			break;
@@ -98,6 +101,14 @@ int main(int argc, char *argv[])
 	}
 
 	first_non_opt = optind;
+
+	if (image.strip_file) {
+		ret  = man_strip_signature_fw(image.strip_file);
+		if (ret < 0)
+			fprintf(stderr, "error: can't strip manifest for %s", image.strip_file);
+
+		return ret;
+	}
 
 	/* we must have config */
 	if (!adsp_config) {

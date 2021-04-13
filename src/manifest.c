@@ -16,6 +16,7 @@
 #include <sys/time.h>
 
 #include <rimage/sof/user/manifest.h>
+#include <rimage/sof/kernel/ext_manifest.h>
 
 #include <rimage/rimage.h>
 #include <rimage/css.h>
@@ -1401,4 +1402,65 @@ int verify_image(struct image *image)
 out:
 	fclose(in_file);
 	return 0;
+}
+
+int man_strip_signature_fw(const char *file)
+{
+	struct CsePartitionDirHeader  cse;
+	struct ext_man_header header;
+	char pure_fw_file[64];
+	char buffer[256];
+	FILE *fd, *out_fd;
+	int buffer_size = 256;
+	int offset;
+	int ret;
+
+	fd = fopen(file, "r");
+	if (!fd) {
+		fprintf(stderr, "error: can't open '%s' file\n", file);
+		return -EIO;
+	}
+
+	sprintf(pure_fw_file, "no_sig_%s", file);
+	out_fd = fopen(pure_fw_file, "w");
+	if (!out_fd) {
+		fprintf(stderr, "error: can't open '%s' file\n", pure_fw_file);
+		return -EIO;
+	}
+
+	ret = fread(&header, sizeof(header), 1, fd);
+	if (ret != 1) {
+		fprintf(stderr, "error: can't read '%s' file\n", file);
+		return -EIO;
+	}
+
+	/* check whether fw has a ext manifest header */
+	if (header.magic == EXT_MAN_MAGIC_NUMBER)
+		offset = header.full_size;
+	else
+		offset = 0;
+
+	fseek(fd, offset, SEEK_SET);
+	ret = fread(&cse, sizeof(cse), 1, fd);
+	if (ret != 1) {
+		fprintf(stderr, "error: can't read '%s' file\n", file);
+		return -EIO;
+	}
+
+	/* cavs 1.8+ */
+	if (cse.header_marker == CSE_HEADER_MAKER) {
+		fseek(fd, offset + FILE_TEXT_OFFSET_V1_8, SEEK_SET);
+	} else {
+		fseek(fd, offset + FILE_TEXT_OFFSET_V1_5, SEEK_SET);
+	}
+
+	ret = fread(buffer, 1, buffer_size, fd);
+	while(ret) {
+		fwrite(buffer, 1, ret, out_fd);
+		ret = fread(buffer, 1,  buffer_size, fd);
+	};
+
+	fclose(fd);
+	fclose(out_fd);
+	return ret;
 }

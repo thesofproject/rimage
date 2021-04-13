@@ -105,6 +105,7 @@ struct image {
 	int meu_offset;
 	int xcc_mod_offset;
 	const char *verify_file;
+	const char *strip_file;
 
 	/* SHA 256 & 384 */
 	const char *key_name;
@@ -197,6 +198,8 @@ int pkcs_v1_5_verify_man_v2_5(struct image *image,
 			    struct fw_image_manifest_v2_5 *man,
 			    void *ptr1, unsigned int size1, void *ptr2,
 			    unsigned int size2);
+
+int man_strip_signature_fw(const char *file);
 
 int elf_parse_module(struct image *image, int module_index, const char *name);
 void elf_free_module(struct image *image, int module_index);
