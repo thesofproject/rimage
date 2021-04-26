@@ -97,7 +97,7 @@ static int ext_man_build(const struct module *module,
 		fprintf(stderr,
 			"error: failed to read %s section content, code %d\n",
 			EXT_MAN_DATA_SECTION, ret);
-		goto out;
+		return ret;
 	}
 	ret = 0;
 
@@ -128,6 +128,7 @@ static int ext_man_build(const struct module *module,
 	*dst_buff = (struct ext_man_header *)buffer;
 
 out:
+	free(sec_buffer);
 	return ret;
 }
 
