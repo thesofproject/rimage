@@ -131,6 +131,7 @@ static int ext_man_build(const struct module *module,
 
 out:
 	free(sec_buffer);
+	/* cppcheck-suppress memleak */
 	return ret;
 }
 
