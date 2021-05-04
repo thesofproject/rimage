@@ -1,0 +1,24 @@
+name: build
+
+on: [pull_request, push, workflow_dispatch]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Pull Docker
+        run : docker pull thesofproject/sof && docker tag thesofproject/sof sof
+
+      - name: Init
+        run: echo -e '#!/bin/bash\nmkdir build && cd build && cmake .. && make -Werror -Wall -Wmissing-prototypes -Wimplicit-fallthrough=3 -Wpointer-arith' > build.sh && chmod +x build.sh
+      - run: docker run -i -t -v $(pwd):/home/sof/work/sof.git --user $(id -u) sof ./build.sh
+  checkpatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install codespell
+        run: sudo apt-get -y install codespell
+
+      - name: run codespell
+        run: git --no-pager log --oneline --graph --decorate --max-count=5
+      - run: git --no-pager log --oneline --graph --decorate --max-count=5 "${TRAVIS_BRANCH}"
+      - run: (set -x; scripts/checkpatch.pl --no-tree --strict --codespell --no-signoff -g ${TRAVIS_COMMIT_RANGE/.../..})
