@@ -55,7 +55,7 @@ load_offset = "0x30000"
 count = 7
 	[[module.entry]]
 	name = "BRNGUP"
-	uuid = "61EB0CB9-34D8-4F59-A21D-04C54C21D3A4"
+	uuid = "2B79E4F3-4675-F649-89DF-3BC194A91AEB"
 	affinity_mask = "0x1"
 	instance_count = "1"
 	domain_types = "0"
@@ -65,7 +65,7 @@ count = 7
 
 	[[module.entry]]
 	name = "BASEFW"
-	uuid = "383B9BE2-3518-4DB0-8891-B1470A8914F8"
+	uuid = "0E398C32-5ADE-BA4B-93B1-C50432280EE4"
 	affinity_mask = "3"
 	instance_count = "1"
 	domain_types = "0"
