@@ -230,6 +230,7 @@ struct fw_ext_man_cavs_header {
 	uint32_t len;	/* sizeof(Extend Manifest) in bytes */
 	uint16_t version_major;	/* Version of Extended Manifest structure */
 	uint16_t version_minor;	/* Version of Extended Manifest structure */
+	uint16_t version_micro; /* Version of Extended Manifest structure */
 	uint32_t num_module_entries;
 } __attribute__((packed));
 
@@ -238,7 +239,7 @@ struct fw_ext_mod_config_header {
 	uint32_t guid[4];	/* Module GUID */
 	uint16_t version_major;	/* Module version */
 	uint16_t version_minor;	/* Module version */
-	uint16_t version_hotfix;	/* Module version */
+	uint16_t version_micro;	/* Module version */
 	uint16_t version_build;	/* Module version */
 	enum mod_type module_type;
 	uint32_t init_settings_min_size;	/* Minimum size of initialization settings (in bytes) */

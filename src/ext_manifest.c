@@ -199,6 +199,7 @@ int ext_man_write_cavs_25(struct image *image)
 
 	header.version_major = mod_ext->ext_mod_config_array->header.version_major;
 	header.version_minor = mod_ext->ext_mod_config_array->header.version_minor;
+	header.version_micro = mod_ext->ext_mod_config_array->header.version_micro;
 	header.num_module_entries = count;
 	header.id = EXTENDED_MANIFEST_MAGIC_HEADER_ID;
 	header.len = sizeof(const struct fw_ext_man_cavs_header);

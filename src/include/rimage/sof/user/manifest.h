@@ -134,7 +134,7 @@ struct sof_man_fw_header {
 	uint32_t feature_mask;
 	uint16_t major_version;
 	uint16_t minor_version;
-	uint16_t hotfix_version;
+	uint16_t micro_version;
 	uint16_t build_version;
 	uint32_t num_module_entries;
 	uint32_t hw_buf_base_addr;

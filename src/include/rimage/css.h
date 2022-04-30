@@ -40,7 +40,7 @@ struct image;
 struct fw_version {
 	uint16_t major_version;
 	uint16_t minor_version;
-	uint16_t hotfix_version;
+	uint16_t micro_version;
 	uint16_t build_version;
 } __attribute__((packed));
 

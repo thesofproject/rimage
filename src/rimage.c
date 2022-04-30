@@ -115,19 +115,21 @@ int main(int argc, char *argv[])
 		return -EINVAL;
 	}
 
-	/* firmware version and build id */
+	/* firmware version that can be major.minor or major.minor.micro */
 	if (image.fw_ver_string) {
-		ret = sscanf(image.fw_ver_string, "%hu.%hu",
+		ret = sscanf(image.fw_ver_string, "%hu.%hu.%hu",
 			     &image.fw_ver_major,
-			     &image.fw_ver_minor);
+			     &image.fw_ver_minor,
+			     &image.fw_ver_micro);
 
-		if (ret != 2) {
+		if (ret != 2 && ret != 3) {
 			fprintf(stderr,
 				"error: cannot parse firmware version\n");
 			return -EINVAL;
 		}
 	}
 
+	/* firmware build id */
 	if (image.fw_ver_build_string) {
 		ret = sscanf(image.fw_ver_build_string, "%hu",
 			     &image.fw_ver_build);
