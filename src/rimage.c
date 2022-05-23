@@ -26,7 +26,7 @@ static void usage(char *name)
 	fprintf(stdout, "\t -r enable relocatable ELF files\n");
 	fprintf(stdout, "\t -s MEU signing offset, disables rimage signing\n");
 	fprintf(stdout, "\t -i set IMR type\n");
-	fprintf(stdout, "\t -f firmware version = major.minor.micro\n");
+	fprintf(stdout, "\t -f firmware version = major.minor or major.minor.micro\n");
 	fprintf(stdout, "\t -b build version\n");
 	fprintf(stdout, "\t -e build extended manifest\n");
 	fprintf(stdout, "\t -y verify signed file\n");
@@ -122,9 +122,9 @@ int main(int argc, char *argv[])
 			     &image.fw_ver_minor,
 			     &image.fw_ver_micro);
 
-		if (ret != 3) {
+		if (ret != 2 && ret != 3) {
 			fprintf(stderr,
-				"error: cannot parse firmware version major.minor.micro\n");
+				"error: cannot parse firmware version major.minor or major.minor.micro\n");
 			return -EINVAL;
 		}
 	}
