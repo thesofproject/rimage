@@ -631,6 +631,7 @@ int pkcs_v1_5_sign_man_ace_v1_5(struct image *image,
 			    void *ptr1, unsigned int size1, void *ptr2,
 			    unsigned int size2)
 {
+	fprintf(stderr, "error: OPENSSL_VERSION_NUMBER >= 0x30000000L is not supported\n");
 	return -EINVAL;
 }
 #endif
