@@ -5,6 +5,14 @@
 // Author: Liam Girdwood <liam.r.girdwood@linux.intel.com>
 //         Keyon Jie <yang.jie@linux.intel.com>
 
+/*
+ * The openssl and its library shipped with Ubuntu22.04 is 3.x,
+ * which can not be used to sign MTL as the signing function is
+ * not migrated to use 3.x API. Set openssl API compatibility to
+ * v1.1.1 to workaround signing failure with openssl 3.x.
+ */
+#define OPENSSL_API_COMPAT 0x10101000L
+
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 #include <openssl/rsa.h>
@@ -528,8 +536,10 @@ int pkcs_v1_5_sign_man_v1_8(struct image *image,
  * of the entire manifest structure, including all
  * extensions, and excluding the last 3 fields of the
  * manifest header (Public Key, Exponent and Signature).
+ *
+ * TODO: Add openssl 3.x compatibility
  */
-#if OPENSSL_VERSION_NUMBER < 0x30000000L
+
 int pkcs_v1_5_sign_man_ace_v1_5(struct image *image,
 			    struct fw_image_manifest_ace_v1_5 *man,
 			    void *ptr1, unsigned int size1, void *ptr2,
@@ -625,15 +635,6 @@ int pkcs_v1_5_sign_man_ace_v1_5(struct image *image,
 	EVP_PKEY_free(privkey);
 	return ret;
 }
-#else
-int pkcs_v1_5_sign_man_ace_v1_5(struct image *image,
-			    struct fw_image_manifest_ace_v1_5 *man,
-			    void *ptr1, unsigned int size1, void *ptr2,
-			    unsigned int size2)
-{
-	return -EINVAL;
-}
-#endif
 
 int pkcs_v1_5_sign_man_v2_5(struct image *image,
 			    struct fw_image_manifest_v2_5 *man,
