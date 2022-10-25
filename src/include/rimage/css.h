@@ -37,6 +37,8 @@ struct image;
 #define MAN_RSA_SIGNATURE_LEN		256
 #define MAN_RSA_SIGNATURE_LEN_2_5	384
 
+#define MAN_CSS_INTEL_RES_0		0
+
 struct fw_version {
 	uint16_t major_version;
 	uint16_t minor_version;

@@ -706,6 +706,7 @@ static void dump_css_v1_5(const struct css_header_v1_5 *css)
 	DUMP_KEY("key_size", "%d", css->key_size);
 	DUMP_KEY("modulus_size", "%d", css->modulus_size);
 	DUMP_KEY("exponent_size", "%d", css->exponent_size);
+	DUMP_KEY("reserved0", "%d", css->reserved0);
 }
 
 static int parse_css_v1_5(const toml_table_t *toml, struct parse_ctx *pctx,
@@ -758,6 +759,10 @@ static int parse_css_v1_5(const toml_table_t *toml, struct parse_ctx *pctx,
 	if (ret < 0)
 		return ret;
 
+	out->reserved0 = parse_uint32_key(css, &ctx, "intel_reserved0", MAN_CSS_INTEL_RES_0, &ret);
+	if (ret < 0)
+		return ret;
+
 	/* check everything parsed */
 	ret = assert_everything_parsed(css, &ctx);
 	if (ret < 0)
@@ -789,6 +794,7 @@ static void dump_css_v1_8(const struct css_header_v1_8 *css)
 	DUMP_KEY("svn", "%d", css->svn);
 	DUMP_KEY("modulus_size", "%d", css->modulus_size);
 	DUMP_KEY("exponent_size", "%d", css->exponent_size);
+	DUMP_KEY("reserved0", "%d", css->reserved0);
 }
 
 static int parse_css_v1_8(const toml_table_t *toml, struct parse_ctx *pctx,
@@ -843,6 +849,10 @@ static int parse_css_v1_8(const toml_table_t *toml, struct parse_ctx *pctx,
 	if (ret < 0)
 		return ret;
 
+	out->reserved0 = parse_uint32_key(css, &ctx, "intel_reserved0", MAN_CSS_INTEL_RES_0, &ret);
+	if (ret < 0)
+		return ret;
+
 	/* check everything parsed */
 	ret = assert_everything_parsed(css, &ctx);
 	if (ret < 0)
@@ -874,6 +884,7 @@ static void dump_css_v2_5(const struct css_header_v2_5 *css)
 	DUMP_KEY("svn", "%d", css->svn);
 	DUMP_KEY("modulus_size", "%d", css->modulus_size);
 	DUMP_KEY("exponent_size", "%d", css->exponent_size);
+	DUMP_KEY("reserved0", "%d", css->reserved0);
 }
 
 static int parse_css_v2_5(const toml_table_t *toml, struct parse_ctx *pctx,
@@ -928,8 +939,11 @@ static int parse_css_v2_5(const toml_table_t *toml, struct parse_ctx *pctx,
 	if (ret < 0)
 		return ret;
 
+	out->reserved0 = parse_uint32_key(css, &ctx, "intel_reserved0", MAN_CSS_INTEL_RES_0, &ret);
+	if (ret < 0)
+		return ret;
+
 	/* hardcoded to align with meu */
-	out->reserved0 = 0;
 	out->reserved1[0] = 0xf;
 	out->reserved1[1] = 0x048e0000; // TODO: what is this ?
 
