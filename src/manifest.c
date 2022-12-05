@@ -1550,7 +1550,7 @@ int verify_image(struct image *image)
 	buffer = malloc(size);
 	if (!buffer) {
 		ret = -ENOMEM;
-		goto out;
+		goto close;
 	}
 
 	/* find start of fw image and verify */
@@ -1574,8 +1574,10 @@ int verify_image(struct image *image)
 	fprintf(stderr, "error: could not find valid CSE header $CPD in %s\n",
 		image->verify_file);
 out:
+	free(buffer);
+close:
 	fclose(in_file);
-	return 0;
+	return ret;
 }
 
 
