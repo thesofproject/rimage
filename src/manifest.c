@@ -1638,8 +1638,6 @@ int resign_image(struct image *image)
 		goto out;
 	}
 
-	fclose(in_file);
-
 	for (i = 0; i < size; i += sizeof(uint32_t)) {
 		/* find CSE header marker "$CPD" */
 		if (*(uint32_t *)(buffer + i) == CSE_HEADER_MAKER) {
@@ -1700,6 +1698,9 @@ int resign_image(struct image *image)
 	man_write_fw_mod(image);
 
 out:
+	if (in_file)
+		fclose(in_file);
+
 	free(buffer);
 	return ret;
 }
