@@ -1695,9 +1695,14 @@ int resign_image(struct image *image)
 		goto out;
 	}
 
-	man_write_fw_mod(image);
+	ret = man_write_fw_mod(image);
 
 out:
+	if (image->out_fd) {
+		fclose(image->out_fd);
+		image->out_fd = 0;
+	}
+
 	if (in_file)
 		fclose(in_file);
 
