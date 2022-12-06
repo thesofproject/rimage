@@ -160,7 +160,8 @@ int main(int argc, char *argv[])
 
 	if (image.in_file) {
 		fprintf(stdout, "going to re-sign\n");
-		return resign_image(&image);
+		ret = resign_image(&image);
+		goto out;
 	}
 
 	/* set IMR Type in found machine definition */
@@ -179,7 +180,8 @@ int main(int argc, char *argv[])
 	if (image.num_modules <= 0) {
 		fprintf(stderr,
 			"error: requires at least one ELF input module\n");
-		return -EINVAL;
+		ret = -EINVAL;
+		goto out;
 	}
 
 	/* getopt reorders argv[] */
