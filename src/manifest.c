@@ -1529,21 +1529,21 @@ int verify_image(struct image *image)
 		fprintf(stderr, "error: unable to seek eof %s for reading %d\n",
 			image->verify_file, errno);
 		ret = -errno;
-		goto out;
+		goto close;
 	}
 	size = ftell(in_file);
 	if (size < 0) {
 		fprintf(stderr, "error: unable to get file size for %s %d\n",
 			image->verify_file, errno);
 		ret = -errno;
-		goto out;
+		goto close;
 	}
 	ret = fseek(in_file, 0, SEEK_SET);
 	if (ret < 0) {
 		fprintf(stderr, "error: unable to seek %s for reading %d\n",
 			image->verify_file, errno);
 		ret = -errno;
-		goto out;
+		goto close;
 	}
 
 	/* allocate buffer for parsing */
