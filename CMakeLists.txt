@@ -21,6 +21,7 @@ add_executable(rimage
 	src/elf.c
 	src/rimage.c
 	src/adsp_config.c
+	src/file_utils.c
 	tomlc99/toml.c
 )
 
