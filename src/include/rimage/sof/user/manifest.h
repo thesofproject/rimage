@@ -226,6 +226,27 @@ struct sof_man_module_manifest {
 };
 
 /*
+ *  Api version for sof loadable modules
+ */
+typedef union sof_module_api_version
+{
+    uint32_t full;
+    struct
+    {
+        uint32_t minor    : 10;
+        uint32_t middle   : 10;
+        uint32_t major    : 10;
+        uint32_t reserved : 2;
+    } fields;
+} sof_module_api_version;
+
+typedef const struct
+{
+    uint32_t FORMAT;
+    sof_module_api_version API_VERSION_NUMBER;
+} sof_module_build_info;
+
+/*
  * Module offset in manifest.
  */
 #define SOF_MAN_MODULE_OFFSET(index) \
