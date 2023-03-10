@@ -6,6 +6,7 @@
 //         Keyon Jie <yang.jie@linux.intel.com>
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -93,6 +94,16 @@ static int elf_read_sections(struct image *image, struct module *module,
 			return module->bss_index;
 	}
 
+	/* identify RTOS */
+	for (i = 0; i < hdr->shnum; i++)
+		if ((section[i].flags & valid) &&
+		    section[hdr->shstrndx].size - section[i].name > strlen("devices") &&
+		    !strcmp(module->strings + section[i].name, "devices")) {
+			fprintf(stdout, "info: Zephyr image detected\n");
+			image->adsp->image_rtos = RTOS_ZEPHYR;
+			break;
+		}
+
 	/* parse each section */
 	for (i = 0; i < hdr->shnum; i++) {
 		/* only write valid sections */
@@ -121,10 +132,13 @@ static int elf_read_sections(struct image *image, struct module *module,
 		}
 
 		/*
-		 * Don't convert ROM addresses, ROM sections aren't included in
-		 * the output image
+		 * With Zephyr some sections use cached and some uncached
+		 * aliases, for calculations we convert them all to cached. Make
+		 * sure not to convert ROM addresses, ROM sections aren't
+		 * included in the output image.
 		 */
-		if (section[i].vaddr < rom_base || section[i].vaddr >= rom_base + rom_size)
+		if (image->adsp->image_rtos == RTOS_ZEPHYR &&
+		    (section[i].vaddr < rom_base || section[i].vaddr >= rom_base + rom_size))
 			section[i].vaddr = uncache_to_cache(image, section[i].vaddr);
 
 		module->num_sections++;
@@ -367,6 +381,8 @@ static void elf_module_limits(struct image *image, struct module *module)
 
 	/* iterate all sections and get size of segments */
 	for (i = 0; i < module->hdr.shnum; i++) {
+		bool found = false;
+
 		section = &module->section[i];
 
 		/* module bss can sometimes be missed */
@@ -384,10 +400,24 @@ static void elf_module_limits(struct image *image, struct module *module)
 		/* check programs to get LMA */
 		section_lma = section->vaddr;
 		for (j = 0; j < module->hdr.phnum; j++) {
-			if (section->vaddr == uncache_to_cache(image, module->prg[j].vaddr)) {
-				section_lma = uncache_to_cache(image, module->prg[j].paddr);
+			switch (image->adsp->image_rtos) {
+			case RTOS_ZEPHYR:
+				if (section->vaddr == uncache_to_cache(image,
+								       module->prg[j].vaddr)) {
+					section_lma = uncache_to_cache(image,
+								       module->prg[j].paddr);
+					found = true;
+				}
 				break;
+			default:
+				if (section->vaddr == module->prg[j].vaddr) {
+					section_lma = module->prg[j].paddr;
+					found = true;
+				}
 			}
+
+			if (found)
+				break;
 		}
 
 		fprintf(stdout, "\t%d\t0x%8.8x\t0x%8.8x\t0x%8.8x\t0x%x", i,

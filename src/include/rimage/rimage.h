@@ -138,6 +138,11 @@ struct fw_image_manifest_module {
 	struct sof_man_module *mod_man;
 };
 
+enum rtos_variant {
+	RTOS_XTOS,
+	RTOS_ZEPHYR,
+};
+
 /*
  * Audio DSP descriptor and operations.
  */
@@ -146,6 +151,7 @@ struct adsp {
 	struct mem_zone mem_zones[SOF_FW_BLK_TYPE_NUM];
 
 	uint32_t image_size;
+	enum rtos_variant image_rtos;
 	uint32_t dram_offset;
 
 	uint32_t alias_cached;

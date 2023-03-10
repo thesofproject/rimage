@@ -2334,6 +2334,8 @@ static int adsp_parse_config_fd(FILE *fd, struct image *image)
 		goto error;
 	}
 
+	image->adsp->image_rtos = RTOS_ZEPHYR;
+
 	/* run dedicated toml configuration parser */
 	ret = parser->parse(toml, image);
 error:
