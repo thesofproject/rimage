@@ -13,9 +13,7 @@
 #include <openssl/sha.h>
 #include <openssl/objects.h>
 #include <openssl/bn.h>
-#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/core_names.h>
-#endif
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
@@ -83,16 +81,6 @@ static int rimage_read_key(EVP_PKEY **privkey, struct image *image)
  *
 */
 
-#if OPENSSL_VERSION_NUMBER < 0x30000000L
-static int rimage_check_key(EVP_PKEY *privkey)
-{
-	RSA *priv_rsa = NULL;
-
-	priv_rsa = EVP_PKEY_get1_RSA(privkey);
-
-	return RSA_check_key(priv_rsa);
-}
-#else
 static int rimage_check_key(EVP_PKEY *privkey)
 {
 	EVP_PKEY_CTX *ctx;
@@ -108,39 +96,7 @@ static int rimage_check_key(EVP_PKEY *privkey)
 
 	return ret;
 }
-#endif
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
-static void rimage_set_modexp(EVP_PKEY *privkey, unsigned char *mod, unsigned char *exp)
-{
-	RSA *priv_rsa = NULL;
-	const BIGNUM *n;
-	const BIGNUM *e;
-
-	priv_rsa = EVP_PKEY_get1_RSA(privkey);
-
-	n = priv_rsa->n;
-	e = priv_rsa->e;
-
-	BN_bn2bin(n, mod);
-	BN_bn2bin(e, exp);
-}
-#elif OPENSSL_VERSION_NUMBER < 0x30000000L
-static void rimage_set_modexp(EVP_PKEY *privkey, unsigned char *mod, unsigned char *exp)
-{
-	const BIGNUM *n;
-	const BIGNUM *e;
-	const BIGNUM *d;
-	RSA *priv_rsa = NULL;
-
-	priv_rsa = EVP_PKEY_get1_RSA(privkey);
-
-	RSA_get0_key(priv_rsa, &n, &e, &d);
-
-	BN_bn2bin(n, mod);
-	BN_bn2bin(e, exp);
-}
-#else
 static void rimage_set_modexp(EVP_PKEY *privkey, unsigned char *mod, unsigned char *exp)
 {
 	BIGNUM *n = NULL;
@@ -152,42 +108,7 @@ static void rimage_set_modexp(EVP_PKEY *privkey, unsigned char *mod, unsigned ch
 	BN_bn2bin(n, mod);
 	BN_bn2bin(e, exp);
 }
-#endif
 
-#if OPENSSL_VERSION_NUMBER < 0x30000000L
-static int rimage_sign(EVP_PKEY *privkey, enum manver ver, struct hash_context *digest,
-		       unsigned char *signature)
-{
-	unsigned char sig[MAN_RSA_SIGNATURE_LEN_2_5];
-	unsigned int siglen = MAN_RSA_SIGNATURE_LEN;
-	RSA *priv_rsa = NULL;
-	int ret;
-
-	priv_rsa = EVP_PKEY_get1_RSA(privkey);
-
-	switch (ver) {
-	case V15:
-		/* fallthrough */
-	case V18:
-		ret = RSA_sign(NID_sha256, digest->digest, digest->digest_length,
-			       signature, &siglen, priv_rsa);
-		break;
-	case V25:
-		/* fallthrough */
-	case VACE15:
-		ret = RSA_padding_add_PKCS1_PSS(priv_rsa, sig, digest->digest, digest->algo,
-						/* salt length */ 32);
-		if (ret > 0)
-			ret = RSA_private_encrypt(RSA_size(priv_rsa), sig, signature, priv_rsa,
-						  RSA_NO_PADDING);
-		break;
-	default:
-		return -EINVAL;
-	}
-
-	return ret;
-}
-#else
 static int rimage_sign(EVP_PKEY *privkey, enum manver ver,
 		       struct hash_context *digest, unsigned char *signature)
 {
@@ -236,57 +157,7 @@ out:
 
 	return ret;
 }
-#endif
 
-#if OPENSSL_VERSION_NUMBER < 0x30000000L
-static int rimage_verify(EVP_PKEY *privkey, enum manver ver, struct hash_context *digest,
-			 unsigned char *signature)
-{
-	unsigned char sig[MAN_RSA_SIGNATURE_LEN_2_5];
-	unsigned int siglen = MAN_RSA_SIGNATURE_LEN;
-	RSA *priv_rsa = NULL;
-	char err_buf[256];
-	int ret;
-
-	priv_rsa = EVP_PKEY_get1_RSA(privkey);
-
-	switch (ver) {
-	case V15:
-		/* fallthrough */
-	case V18:
-		ret = RSA_verify(NID_sha256, digest->digest, digest->digest_length, signature,
-				 siglen, priv_rsa);
-
-		if (ret <= 0) {
-			ERR_error_string(ERR_get_error(), err_buf);
-			fprintf(stderr, "error: verify %s\n", err_buf);
-		}
-		break;
-	case V25:
-		/* fallthrough */
-	case VACE15:
-		/* decrypt signature */
-		ret = RSA_public_decrypt(RSA_size(priv_rsa), signature, sig, priv_rsa,
-					 RSA_NO_PADDING);
-		if (ret <= 0) {
-			ERR_error_string(ERR_get_error(), err_buf);
-			fprintf(stderr, "error: verify decrypt %s\n", err_buf);
-			return ret;
-		}
-
-		ret = RSA_verify_PKCS1_PSS(priv_rsa, digest->digest, digest->algo, sig, 32);
-		if (ret <= 0) {
-			ERR_error_string(ERR_get_error(), err_buf);
-			fprintf(stderr, "error: verify %s\n", err_buf);
-		}
-		break;
-	default:
-		return -EINVAL;
-	}
-
-	return ret;
-}
-#else
 static int rimage_verify(EVP_PKEY *privkey, enum manver ver,struct hash_context *digest,
 			 unsigned char *signature)
 {
@@ -342,27 +213,11 @@ out:
 
 	return ret;
 }
-#endif
 
-#if OPENSSL_VERSION_NUMBER < 0x30000000L
-static int rimage_get_key_size(EVP_PKEY *privkey)
-{
-	RSA *priv_rsa = NULL;
-	int key_length;
-
-	priv_rsa = EVP_PKEY_get1_RSA(privkey);
-	key_length = RSA_size(priv_rsa);
-
-	RSA_free(priv_rsa);
-
-	return key_length;
-}
-#else
 static int rimage_get_key_size(EVP_PKEY *privkey)
 {
 	return EVP_PKEY_get_size(privkey);
 }
-#endif
 
 /*
  * RSA signature of manifest. The signature is an PKCS
