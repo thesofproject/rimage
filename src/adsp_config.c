@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
+#include <sys/stat.h>
 
 /* map memory zone string name to enum value */
 static enum snd_sof_fw_blk_type zone_name_to_idx(const char *name)
@@ -2337,18 +2338,69 @@ error:
 	return ret;
 }
 
+static FILE* adsp_conf_files_open(struct adsp_conf_files *files, const char *mode)
+{
+	struct stat statbuf;
+	char *buf;
+	int ret;
+	int i;
+	size_t file_size[MAX_SUPPORTED_CONF_FILES];
+	size_t buf_size = 0;
+
+	for (i = 0; i < files->file_count; i++) {
+		ret = stat(files->file[i], &statbuf);
+		if (ret) {
+			fprintf(stderr, "error: failed to stat file %s\n", files->file[i]);
+			return NULL;
+		}
+
+		file_size[i] = statbuf.st_size;
+		buf_size += statbuf.st_size;
+	}
+	/* Reserve space for adding '\n' at the end of each file */
+	buf_size += files->file_count;
+	files->buffer = malloc(buf_size);
+
+	buf = files->buffer;
+	for (i = 0; i < files->file_count; i++) {
+		FILE *file;
+		size_t read;
+
+		file = fopen(files->file[i], mode);
+		if (!file) {
+			fprintf(stderr, "error: failed to open file %s\n", files->file[i]);
+			return NULL;
+		}
+		read = fread(buf, 1, file_size[i], file);
+		if (read != file_size[i]) {
+			fprintf(stderr, "error: failed to read file %s\n", files->file[i]);
+			return NULL;
+		}
+		fclose(file);
+
+		buf[file_size[i]] = '\n';
+		buf += file_size[i] + 1;
+	}
+	return fmemopen(files->buffer, buf_size, mode);
+}
+
+static void adsp_conf_files_close(struct adsp_conf_files *files)
+{
+	free(files->buffer);
+}
+
 /* public function, fully handle parsing process */
-int adsp_parse_config(const char *file, struct image *image)
+int adsp_parse_config(struct adsp_conf_files *files, struct image *image)
 {
 	FILE *fd;
 	int ret;
 
-	fd = fopen(file, "r");
+	fd = adsp_conf_files_open(files, "r");
 	if (!fd)
-		return file_error("unable to open file for reading", file);
+		return -EINVAL;
 
 	ret = adsp_parse_config_fd(fd, image);
-	fclose(fd);
+	adsp_conf_files_close(files);
 	return ret;
 }
 

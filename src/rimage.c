@@ -40,11 +40,12 @@ int main(int argc, char *argv[])
 {
 	struct image image;
 	struct adsp *heap_adsp;
-	const char *adsp_config = NULL;
-	int opt, ret, i, first_non_opt;
+	struct adsp_conf_files files;
+	int opt, ret, first_non_opt;
 	int use_ext_man = 0;
 	unsigned int pv_bit = 0;
 	bool imr_type_override = false;
+	int i = 0;
 
 	memset(&image, 0, sizeof(image));
 
@@ -84,7 +85,8 @@ int main(int argc, char *argv[])
 			use_ext_man = 1;
 			break;
 		case 'c':
-			adsp_config = optarg;
+			files.file[i] = optarg;
+			i++;
 			break;
 		case 'y':
 			image.verify_file = optarg;
@@ -110,11 +112,12 @@ int main(int argc, char *argv[])
 	first_non_opt = optind;
 
 	/* we must have config */
-	if (!adsp_config) {
+	if (i == 0 || i >= MAX_SUPPORTED_CONF_FILES) {
 		usage(argv[0]);
-		fprintf(stderr, "error: must have adsp desc\n");
+		fprintf(stderr, "error: invalid number of adsp_desc provided\n");
 		return -EINVAL;
 	}
+	files.file_count = i;
 
 	/* requires private key */
 	if (!image.key_name) {
@@ -161,7 +164,7 @@ int main(int argc, char *argv[])
 	}
 	image.adsp = heap_adsp;
 	memset(heap_adsp, 0, sizeof(*heap_adsp));
-	ret = adsp_parse_config(adsp_config, &image);
+	ret = adsp_parse_config(&files, &image);
 	if (ret < 0)
 		goto out;
 
