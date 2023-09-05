@@ -1606,7 +1606,7 @@ int verify_image(struct image *image)
 		image->verify_file);
 out:
 	fclose(in_file);
-	return 0;
+	return ret;
 }
 
 
