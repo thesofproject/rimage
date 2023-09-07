@@ -87,13 +87,6 @@ count = 22
 	load_type = "0"
 	module_type = "1"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0,   0,   0xfeef, 0xc,  0x8,   0x45ff,
-		   1, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-		   1, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-		   1, 0, 0xfeef, 0xc, 0x8, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [1, 0, 0, 0, 296, 4996000, 384, 384, 0, 4996, 0,
@@ -111,18 +104,6 @@ count = 22
 	load_type = "0"
 	module_type = "2"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			1, 0, 0xfeef, 0xc, 0x8, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [1, 0, 0, 0, 520, 2280000, 384, 384, 0, 2280, 0,
@@ -140,14 +121,6 @@ count = 22
 	load_type = "0"
 	module_type = "3"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xf, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [1, 0, 0, 0, 280, 4918000, 768, 768, 0, 4918, 0,
@@ -201,11 +174,6 @@ count = 22
 	load_type = "0"
 	module_type = "4"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xa, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xa, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [1, 0, 0, 0, 480, 11667000, 384, 384, 0, 11667, 0,
@@ -223,11 +191,6 @@ count = 22
 	load_type = "0"
 	module_type = "9"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xf, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [1, 0, 0, 0, 416, 12100000, 1536, 1536, 0, 12100, 0,
@@ -246,10 +209,6 @@ count = 22
 	load_type = "0"
 	module_type = "9"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	pin = [0, 0, 0xfeef, 0xc, 0x8, 0x45ff,
-			1, 0, 0xfeef, 0xc, 0x8, 0x45ff]
 
 	mod_cfg = [1, 0, 0, 0, 20480, 21808000, 64, 192, 0, 21808, 0,
 			2, 0, 0, 0, 20480, 45820000, 64, 384, 0, 45820, 0,
@@ -276,11 +235,6 @@ count = 22
 	load_type = "0"
 	module_type = "7"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xffff, 0xc, 0x8, 0x05ff,
-			1, 0, 0xf6c9, 0xc, 0x8, 0x05ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [1, 0, 0, 0, 12832, 15976000, 128, 512, 0, 15976, 0,
@@ -320,10 +274,6 @@ count = 22
 	init_config = "1"
 	module_type = "0xC"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xe, 0xa, 0x45ff, 1, 0, 0xfeef, 0xe, 0xa, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 960, 488500, 16, 16, 0, 0, 0,
@@ -339,11 +289,6 @@ count = 22
 	load_type = "0"
 	module_type = "5"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xffff, 0xc, 0x8, 0x05ff,
-			1, 0, 0xffff, 0xc, 0x8, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [1, 0, 0, 0, 216, 5044000, 384, 192, 0, 5044, 0,
@@ -386,7 +331,6 @@ count = 22
 	load_type = "0"
 	module_type = "9"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 4096, 100000, 48, 48, 0, 1000, 0]
@@ -400,12 +344,6 @@ count = 22
 	load_type = "0"
 	module_type = "6"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xa, 0x45ff,
-			0, 0, 0xfeef, 0xf, 0xa, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xa, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 280, 460700, 16, 16, 0, 0, 0]
@@ -419,11 +357,6 @@ count = 22
 	load_type = "0"
 	module_type = "8"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xa, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 480, 1114000, 64, 64, 0, 0, 0]
@@ -437,11 +370,6 @@ count = 22
 	load_type = "0"
 	module_type = "0xB"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xa, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 14400, 1114000, 16, 16, 0, 0, 0]
@@ -457,12 +385,6 @@ count = 22
 	init_config = "1"
 	module_type = "0xD"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xa, 0x45ff,
-			0, 0, 0xfeef, 0xf, 0xa, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xa, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 296, 5000000, 384, 384, 0, 5000, 0]
@@ -477,11 +399,6 @@ count = 22
 	load_type = "0"
 	module_type = "9"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-		1, 0, 0xfeef, 0xf, 0xf, 0x1ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 4096, 1000000, 128, 128, 0, 1000, 0,
@@ -497,11 +414,6 @@ count = 22
 	load_type = "0"
 	module_type = "9"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff,
-		1, 0, 0xfeef, 0xf, 0xf, 0x1ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 4096, 1000000, 128, 128, 0, 0, 0]
@@ -517,11 +429,6 @@ count = 22
 	init_config = "1"
 	module_type = "30"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xa, 0x45ff,
-			1, 0, 0xfeef, 0xf, 0xa, 0x45ff]
 
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 260, 1063000, 16, 21, 0, 0, 0,
@@ -541,9 +448,7 @@ count = 22
 	load_type = "0"
 	module_type = "9"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff, 1, 0, 0xfeef, 0xf, 0xf, 0x1ff]
+
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 4096, 1000000, 128, 128, 0, 0, 0]
 
@@ -560,9 +465,7 @@ count = 22
 	module_type = "9"
 	init_config = "1"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff, 1, 0, 0xfeef, 0xf, 0xf, 0x1ff]
+
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 4096, 1000000, 128, 128, 0, 0, 0]
 
@@ -576,8 +479,6 @@ count = 22
 	load_type = "0"
 	module_type = "9"
 	auto_start = "0"
-	sched_caps = [1, 0x00008000]
-	# pin = [dir, type, sample rate, size, container, channel-cfg]
-	pin = [0, 0, 0xfeef, 0xf, 0xf, 0x45ff, 1, 0, 0xfeef, 0xf, 0xf, 0x1ff]
+
 	# mod_cfg [PAR_0 PAR_1 PAR_2 PAR_3 IS_BYTES CPS IBS OBS MOD_FLAGS CPC OBLS]
 	mod_cfg = [0, 0, 0, 0, 4096, 1000000, 128, 128, 0, 0, 0]
