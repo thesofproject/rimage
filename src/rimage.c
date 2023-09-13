@@ -122,8 +122,8 @@ int main(int argc, char *argv[])
 		return -EINVAL;
 	}
 
-	/* make sure we have an outfile if not verifying */
-	if ((!image.out_file && !image.verify_file)) {
+	/* We are either signing or verifying an image, not both or neither */
+	if (!(!!image.out_file ^ !!image.verify_file)) {
 		usage(argv[0]);
 		return -EINVAL;
 	}
