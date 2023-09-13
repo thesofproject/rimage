@@ -15,6 +15,7 @@
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 #define MAX_MODULES		32
+#define MAX_SUPPORTED_CONF_FILES	8
 
 struct adsp;
 
@@ -126,6 +127,12 @@ struct adsp {
 	struct fw_image_manifest_v1_5_sue *man_v1_5_sue;
 	struct fw_image_manifest_module *modules;
 	int exec_boot_ldr;
+};
+
+struct adsp_conf_files {
+	uint32 file_count;
+	char *file[MAX_SUPPORTED_CONF_FILES];
+	char *out_file;
 };
 
 int ri_manifest_sign_v1_5(struct image *image);

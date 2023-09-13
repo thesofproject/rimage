@@ -2337,15 +2337,50 @@ error:
 	return ret;
 }
 
+static void copy_file(FILE *src, FILE *dst)
+{
+	char ch;
+	while ((ch = fgetc(src)) != EOF)
+		fputc(ch, dst);
+}
+
+static FILE* adsp_conf_files_open(const struct adsp_conf_files *files, const char *mode)
+{
+	FILE *file, *out_file;
+	int i;
+
+	out_file = fopen(files->out_file, "w");
+	if (!out_file) {
+		file_error("unable to open file for writing", files->out_file);
+		return NULL;
+	}
+
+	/* Merge multiple input toml files into one */
+	for (i = 0; i < files->file_count; i++) {
+		fprintf(out_file, "## File path: %s\n", files->file[i]);
+		file = fopen(files->file[i], "r");
+		if (!file) {
+			file_error("unable to open file for reading", files->file[i]);
+			fclose(out_file);
+			return NULL;
+		}
+		copy_file(file, out_file);
+		fclose(file);
+		fprintf(out_file, "\n\n");
+	}
+	fclose(out_file);
+	return fopen(files->out_file, mode);
+}
+
 /* public function, fully handle parsing process */
-int adsp_parse_config(const char *file, struct image *image)
+int adsp_parse_config(const struct adsp_conf_files *files, struct image *image)
 {
 	FILE *fd;
 	int ret;
 
-	fd = fopen(file, "r");
+	fd = adsp_conf_files_open(files, "r");
 	if (!fd)
-		return file_error("unable to open file for reading", file);
+		return file_error("unable to open file for reading", files->out_file);
 
 	ret = adsp_parse_config_fd(fd, image);
 	fclose(fd);
