@@ -89,7 +89,7 @@ static int elf_read_sections(struct image *image, struct manifest_module *module
 	} else {
 		/* find manifest module data */
 		module->bss_index = elf_find_section(module, ".bss");
-		if (module->bss_index < 0)
+		if (module->bss_index < 0 && !image->loadable_module)
 			return module->bss_index;
 	}
 
