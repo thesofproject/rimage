@@ -150,6 +150,9 @@ static uint32_t elf_to_file_offset(struct image *image,
 	if (section->type == SHT_PROGBITS || section->type == SHT_INIT_ARRAY) {
 		/* check programs for lma/vma change */
 		for (i = 0; i < module->hdr.phnum; i++) {
+			if (module->prg[i].type != PT_LOAD)
+				continue;
+
 			if (section->vaddr == module->prg[i].vaddr) {
 				elf_addr = module->prg[i].paddr;
 				break;
