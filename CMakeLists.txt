@@ -4,6 +4,15 @@ cmake_minimum_required(VERSION 3.10)
 
 project(SOF_RIMAGE C)
 
+# Secret bisectability escape hatch in case things change again...
+if(NOT RIMAGE_FORCE_BUILD_DEAD_BRANCH)
+message(FATAL_ERROR
+"The rimage 'main' branch has been moved to:
+  https://github.com/thesofproject/sof/tree/main/tools/rimage
+Please use another branch.
+For more see https://github.com/thesofproject/sof/issues/8178")
+endif()
+
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "No CMAKE_BUILD_TYPE, defaulting to Debug")
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build Type" FORCE)
