@@ -10,6 +10,8 @@ message(FATAL_ERROR
 "The rimage 'main' branch has been moved to:
   https://github.com/thesofproject/sof/tree/main/tools/rimage
 Please use another branch.
+Note you can `git cherry-pick -x` commits across the different \
+sof and rimage git repositories, see example in the README.md here.
 For more see https://github.com/thesofproject/sof/issues/8178")
 endif()
 
