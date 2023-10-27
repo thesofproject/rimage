@@ -5,6 +5,32 @@ the DSP on certain Intel System-on-Chip (SoC). This is used by
 the [Sound Open Firmware (SOF)](https://github.com/thesofproject/sof)
 to generate binary image files.
 
+**As of October 2023, the main branch and active development of
+https://github.com/thesofproject/sof/rimage has been transferred to a
+subdirectory of the main sof repo** and frozen in the standalone rimage
+git repo. See https://github.com/thesofproject/sof/issues/8178 for more.
+
+Other, stable/maintenance branches of the standalone rimage git repo are
+still being used!
+
+Because the entire rimage git history has been transferred, it is very
+easy to `cherry-pick -x` commits across sof.git and rimage.git. Here's
+an example how:
+
+```shell
+cd sof/
+git -C rimage/ remote add sof-parent "$(pwd)"
+cd rimage/
+git checkout stable-v2.7
+git fetch sof-parent
+git cherry-pick -x abcdef
+```
+
+... where `abcdef` is a commit from sof.git that you want to cherry-pick
+to a stable branch of rimage.git. Obviously, `abcdef` changes outside
+the `sof/tools/rimage/` directory will not apply.
+
+
 ## Building
 
 Most SOF users never build `rimage` directly but as an ExternalProject
