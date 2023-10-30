@@ -55,6 +55,7 @@ base_offset = "0x2000"
 [fw_desc.header]
 name = "ADSPFW"
 load_offset = "0x40000"
+fw_image_flags = "0x12" # BASE_FW (bit 1) + CONTEXT_IS_NOT_SAVED (bit 4)
 
 [module]
 count = 18
